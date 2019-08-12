@@ -1,4 +1,4 @@
-# Aritichoke CI Infrastructure
+# Artichoke CI Infrastructure
 
 [![Discord](https://img.shields.io/discord/607683947496734760)](https://discord.gg/QCe2tp2)
 
