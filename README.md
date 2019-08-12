@@ -5,6 +5,16 @@
 Infrastructure for [Artichoke](https://github.com/artichoke/artichoke) build
 pipelines.
 
+## Build Statistics
+
+| Repository                                                          |                                           Statistics                                           |
+| ------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------: |
+| [artichoke](https://github/artichoke/artichoke)                     |   ![Artichoke build statistics](https://buildstats.info/circleci/chart/artichoke/artichoke)    |
+| [playground](https://github/artichoke/playground)                   |  ![Playground build statistics](https://buildstats.info/circleci/chart/artichoke/playground)   |
+| [artichoke.github.io](https://github/artichoke/artichoke.github.io) | ![Site build statistics](https://buildstats.info/circleci/chart/artichoke/artichoke.github.io) |
+| [cactusref](https://github/artichoke/cactusref)                     |   ![CactusRef build statistics](https://buildstats.info/circleci/chart/artichoke/cactusref)    |
+| [ferrocarril](https://github/artichoke/ferrocarril)                 | ![ferrocarril build statistics](https://buildstats.info/circleci/chart/artichoke/ferrocarril)  |
+
 ## License
 
 artichoke-ci is licensed under the [MIT License](/LICENSE).
