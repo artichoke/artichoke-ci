@@ -165,7 +165,8 @@ RUN set -eux; \
     rustup component add rustfmt; \
     rustup component add clippy; \
     rustup target add wasm32-unknown-emscripten; \
-    rustup target add wasm32-unknown-unknown;
+    rustup target add wasm32-unknown-unknown; \
+    curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh;
 
 ###################################
 # End of Rust Dockerfile
