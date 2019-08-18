@@ -252,10 +252,11 @@ RUN set -eux; \
   apt-get install "llvm-$LLVM_PKG_VERSION" "clang-$LLVM_PKG_VERSION" "lld-$LLVM_PKG_VERSION"; \
   ln -s $(which "clang-$LLVM_PKG_VERSION") /usr/local/bin/clang; \
   ln -s $(which "lld-$LLVM_PKG_VERSION") /usr/local/bin/lld; \
-  ln -s $(which "ld-wasm-$LLVM_PKG_VERSION") /usr/local/bin/ld-wasm; \
+  ln -s $(which "wasm-ld-$LLVM_PKG_VERSION") /usr/local/bin/wasm-ld; \
   ln -s $(which "llvm-ar-$LLVM_PKG_VERSION") /usr/local/bin/ar; \
   clang --version; \
-  apt-get install bison gperf;
+  apt-get install bison gperf; \
+  sudo apt-get install wabt;
 
 ENV CC clang
 
