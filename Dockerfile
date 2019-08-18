@@ -17,7 +17,11 @@ RUN apt-get update \
   && apt-get install -y \
     git mercurial xvfb apt \
     locales sudo openssh-client ca-certificates tar gzip parallel \
-    net-tools netcat unzip zip bzip2 gnupg curl wget make
+    net-tools netcat unzip zip bzip2 gnupg curl wget make \
+    # install circleci base image prerequisites
+    git ssh tar gzip ca-certificates curl wget gpg software-properties-common \
+    # quality of life tools
+    vim less
 
 # Set timezone to UTC by default
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
@@ -25,10 +29,6 @@ RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 # Use unicode
 RUN locale-gen C.UTF-8 || true
 ENV LANG=C.UTF-8
-
-# install circleci base image prerequisites
-RUN apt-get update && \
-    apt-get install -y git ssh tar gzip ca-certificates curl wget gpg software-properties-common
 
 # install jq
 RUN JQ_URL="https://circle-downloads.s3.amazonaws.com/circleci-images/cache/linux-amd64/jq-latest" \
