@@ -107,11 +107,12 @@ make -j "$(nproc)"
 make install
 
 apt-mark auto '.*' >/dev/null
-apt-mark manual "$savedAptMark" >/dev/null
+# shellcheck disable=SC2086
+apt-mark manual $savedAptMark >/dev/null
 find /usr/local -type f -executable -not \( -name '*tkinter*' \) -exec ldd '{}' ';' |
   awk '/=>/ { print $(NF-1) }' |
   sort -u |
-  xargs -r dpkg-query --search |
+  xargs -r dpkg-query --search || : |
   cut -d: -f1 |
   sort -u |
   xargs -r apt-mark manual \
