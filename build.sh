@@ -3,16 +3,15 @@
 set -euo pipefail
 set -x
 
-
-echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90artichokeci
-echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90artichokeci
+echo 'APT::Get::Assume-Yes "true";' >/etc/apt/apt.conf.d/90artichokeci
+echo 'DPkg::Options "--force-confnew";' >>/etc/apt/apt.conf.d/90artichokeci
 
 export DEBIAN_FRONTEND=noninteractive
 
 # Make sure PATH includes ~/.local/bin
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=839155
 # shellcheck disable=SC2016
-echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile.d/user-local-path.sh
+echo 'PATH="$HOME/.local/bin:$PATH"' >>/etc/profile.d/user-local-path.sh
 
 # man directory is missing in some base images
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199
@@ -57,11 +56,11 @@ export LANG=C.UTF-8
 ###################################
 
 # skip installing gem documentation
-mkdir -p /usr/local/etc;
-{ \
-	echo 'install: --no-document'; \
-	echo 'update: --no-document'; \
-} >> /usr/local/etc/gemrc
+mkdir -p /usr/local/etc
+{
+  echo 'install: --no-document'
+  echo 'update: --no-document'
+} >>/usr/local/etc/gemrc
 
 export RUBY_MAJOR=2.6
 export RUBY_VERSION=2.6.3
@@ -72,11 +71,11 @@ export RUBY_DOWNLOAD_SHA256=11a83f85c03d3f0fc9b8a9b6cad1b2674f26c5aaa43ba858d4b0
 savedAptMark="$(apt-mark showmanual)"
 apt-get update
 apt-get install -y --no-install-recommends \
-	bison \
-	dpkg-dev \
+  bison \
+  dpkg-dev \
   libgdbm-dev \
-	ruby \
-	;
+  ruby \
+  ;
 rm -rf /var/lib/apt/lists/*
 
 wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz"
@@ -89,34 +88,34 @@ rm ruby.tar.xz
 pushd /usr/src/ruby
 # hack in "ENABLE_PATH_CHECK" disabling to suppress:
 #   warning: Insecure world writable dir
-{ \
-	echo '#define ENABLE_PATH_CHECK 0'; \
-	echo; \
-  cat file.c; \
-} > file.c.new
+{
+  echo '#define ENABLE_PATH_CHECK 0'
+  echo
+  cat file.c
+} >file.c.new
 mv file.c.new file.c
 
 autoconf
 gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"
 ./configure \
   --build="$gnuArch" \
-	--disable-install-doc \
-	--enable-shared \
+  --disable-install-doc \
+  --enable-shared \
   ;
 
 make -j "$(nproc)"
 make install
 
-apt-mark auto '.*' > /dev/null
-apt-mark manual "$savedAptMark" > /dev/null
-find /usr/local -type f -executable -not \( -name '*tkinter*' \) -exec ldd '{}' ';' \
-  | awk '/=>/ { print $(NF-1) }' \
-	| sort -u \
-	| xargs -r dpkg-query --search \
-  | cut -d: -f1 \
-	| sort -u \
-  | xargs -r apt-mark manual \
-	;
+apt-mark auto '.*' >/dev/null
+apt-mark manual "$savedAptMark" >/dev/null
+find /usr/local -type f -executable -not \( -name '*tkinter*' \) -exec ldd '{}' ';' |
+  awk '/=>/ { print $(NF-1) }' |
+  sort -u |
+  xargs -r dpkg-query --search |
+  cut -d: -f1 |
+  sort -u |
+  xargs -r apt-mark manual \
+  ;
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
 popd
@@ -155,14 +154,29 @@ export CARGO_HOME=/usr/local/cargo
 export PATH="/usr/local/cargo/bin:$PATH"
 export RUST_VERSION="nightly-2019-07-08"
 
-dpkgArch="$(dpkg --print-architecture)"; \
+dpkgArch="$(dpkg --print-architecture)"
 case "${dpkgArch##*-}" in
-    amd64) rustArch='x86_64-unknown-linux-gnu'; rustupSha256='a46fe67199b7bcbbde2dcbc23ae08db6f29883e260e23899a88b9073effc9076' ;;
-    armhf) rustArch='armv7-unknown-linux-gnueabihf'; rustupSha256='6af5abbbae02e13a9acae29593ec58116ab0e3eb893fa0381991e8b0934caea1' ;;
-    arm64) rustArch='aarch64-unknown-linux-gnu'; rustupSha256='51862e576f064d859546cca5f3d32297092a850861e567327422e65b60877a1b' ;;
-    i386) rustArch='i686-unknown-linux-gnu'; rustupSha256='91456c3e6b2a3067914b3327f07bc182e2a27c44bff473263ba81174884182be' ;;
-    *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;;
-  esac
+  amd64)
+    rustArch='x86_64-unknown-linux-gnu'
+    rustupSha256='a46fe67199b7bcbbde2dcbc23ae08db6f29883e260e23899a88b9073effc9076'
+    ;;
+  armhf)
+    rustArch='armv7-unknown-linux-gnueabihf'
+    rustupSha256='6af5abbbae02e13a9acae29593ec58116ab0e3eb893fa0381991e8b0934caea1'
+    ;;
+  arm64)
+    rustArch='aarch64-unknown-linux-gnu'
+    rustupSha256='51862e576f064d859546cca5f3d32297092a850861e567327422e65b60877a1b'
+    ;;
+  i386)
+    rustArch='i686-unknown-linux-gnu'
+    rustupSha256='91456c3e6b2a3067914b3327f07bc182e2a27c44bff473263ba81174884182be'
+    ;;
+  *)
+    echo >&2 "unsupported architecture: ${dpkgArch}"
+    exit 1
+    ;;
+esac
 url="https://static.rust-lang.org/rustup/archive/1.18.3/${rustArch}/rustup-init"
 wget "$url"
 echo "${rustupSha256} *rustup-init" | sha256sum -c -
@@ -200,13 +214,16 @@ export NODE_VERSION="12.8.1"
 ARCH=
 dpkgArch="$(dpkg --print-architecture)"
 case "${dpkgArch##*-}" in
-  amd64) ARCH='x64';;
-  ppc64el) ARCH='ppc64le';;
-  s390x) ARCH='s390x';;
-  arm64) ARCH='arm64';;
-  armhf) ARCH='armv7l';;
-  i386) ARCH='x86';;
-  *) echo "unsupported architecture"; exit 1 ;;
+  amd64) ARCH='x64' ;;
+  ppc64el) ARCH='ppc64le' ;;
+  s390x) ARCH='s390x' ;;
+  arm64) ARCH='arm64' ;;
+  armhf) ARCH='armv7l' ;;
+  i386) ARCH='x86' ;;
+  *)
+    echo "unsupported architecture"
+    exit 1
+    ;;
 esac
 # gpg keys listed at https://github.com/nodejs/node#release-keys
 for key in \
@@ -220,12 +237,11 @@ for key in \
   8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
   4ED778F539E3634C779C87C6D7062848A1AB005C \
   A48C2BEE680E841632CD4E44F07496B3EB3C1762 \
-  B9E2F5981AA6E0CD28160D9FF13993A75599653C \
-; do
-  gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-  gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-  gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" \
-  ;
+  B9E2F5981AA6E0CD28160D9FF13993A75599653C; do
+  gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ||
+    gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" ||
+    gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" \
+    ;
 done
 curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz"
 curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc"
@@ -239,12 +255,11 @@ export YARN_VERSION=1.17.3
 
 # shellcheck disable=SC2043
 for key in \
-  6A010C5166006599AA17F08146C2130DFD2497F5 \
-; do
-  gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-  gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-  gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" \
-  ;
+  6A010C5166006599AA17F08146C2130DFD2497F5; do
+  gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ||
+    gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" ||
+    gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" \
+    ;
 done
 curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz"
 curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc"
@@ -288,5 +303,5 @@ export CC=clang
 
 groupadd --gid 3434 artichoke
 useradd --uid 3434 --gid artichoke --shell /bin/bash --create-home artichoke
-echo 'artichoke ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-artichoke
-echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
+echo 'artichoke ALL=NOPASSWD: ALL' >>/etc/sudoers.d/50-artichoke
+echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >>/etc/sudoers.d/env_keep
