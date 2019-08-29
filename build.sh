@@ -286,6 +286,7 @@ apt-add-repository 'deb http://apt.llvm.org/buster/ llvm-toolchain-buster main'
 apt-get update
 apt-get install "llvm-$LLVM_PKG_VERSION" "clang-$LLVM_PKG_VERSION" "lld-$LLVM_PKG_VERSION"
 
+ln -s "$(command -v "llvm-config-$LLVM_PKG_VERSION")" /usr/local/bin/llvm-config
 ln -s "$(command -v "clang-$LLVM_PKG_VERSION")" /usr/local/bin/clang
 ln -s "$(command -v "lld-$LLVM_PKG_VERSION")" /usr/local/bin/lld
 ln -s "$(command -v "wasm-ld-$LLVM_PKG_VERSION")" /usr/local/bin/wasm-ld
