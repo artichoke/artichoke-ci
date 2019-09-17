@@ -3,12 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Artichoke CI infrastructure",
-  "keywords": [
-    "ci",
-    "docker",
-    "container",
-    "build"
-  ],
+  "keywords": ["ci", "docker", "container", "build"],
   "homepage": "https://github.com/artichoke/artichoke-ci#readme",
   "bugs": "https://github.com/artichoke/artichoke-ci/issues",
   "license": "MIT",
@@ -50,9 +45,7 @@
     "prettier-eslint": "^9.0.0"
   },
   "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
+    "presets": ["@babel/preset-env"]
   },
   "eslintConfig": {
     "env": {
@@ -62,11 +55,7 @@
       "node": true
     },
     "parser": "babel-eslint",
-    "plugins": [
-      "html",
-      "import",
-      "prettier"
-    ],
+    "plugins": ["html", "import", "prettier"],
     "extends": [
       "airbnb",
       "prettier",
