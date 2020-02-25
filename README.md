@@ -5,6 +5,12 @@
 Infrastructure for [Artichoke](https://github.com/artichoke/artichoke) build
 pipelines.
 
+## Archived
+
+These images were required to speed up CircleCI build times. The Artichoke
+organization migrated to GitHub Actions, which comes with well provisioned
+base images and makes this repository unnecessary.
+
 ## Build Statistics
 
 | Repository                                                          |                                           Statistics                                           |
